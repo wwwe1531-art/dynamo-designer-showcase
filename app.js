@@ -1,5 +1,5 @@
 const dialog = document.querySelector('#lightbox');
-const availablePng = new Set(['today-latest','week-latest']);
+const availablePng = new Set();
 const preview = key => 'assets/' + key + '.webp';
 const full = key => 'assets/' + key + (availablePng.has(key) ? '.png' : '.webp');
 
