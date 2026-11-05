@@ -1,0 +1,107 @@
+[
+  {
+    "id": "today",
+    "english": "Today",
+    "title": "היום שלי",
+    "variants": [
+      {
+        "key": "today-original",
+        "label": "המקור",
+        "src": "assets/today-original.png",
+        "width": 941,
+        "height": 1672
+      },
+      {
+        "key": "today-latest",
+        "label": "גרסה מאוחרת",
+        "src": "assets/today-latest.png",
+        "width": 941,
+        "height": 1672
+      }
+    ]
+  },
+  {
+    "id": "week",
+    "english": "Week",
+    "title": "השבוע שלי",
+    "variants": [
+      {
+        "key": "week-original",
+        "label": "המקור",
+        "src": "assets/week-original.png",
+        "width": 941,
+        "height": 1672
+      },
+      {
+        "key": "week-latest",
+        "label": "גרסה מאוחרת",
+        "src": "assets/week-latest.png",
+        "width": 941,
+        "height": 1672
+      }
+    ]
+  },
+  {
+    "id": "shopping",
+    "english": "Shopping",
+    "title": "קניות ומזווה",
+    "variants": [
+      {
+        "key": "shopping-original",
+        "label": "המקור",
+        "src": "assets/shopping-original.png",
+        "width": 941,
+        "height": 1672
+      },
+      {
+        "key": "shopping-latest",
+        "label": "גרסה מאוחרת",
+        "src": "assets/shopping-latest.png",
+        "width": 941,
+        "height": 1672
+      }
+    ]
+  },
+  {
+    "id": "brand",
+    "english": "Brand",
+    "title": "זהות המותג",
+    "variants": [
+      {
+        "key": "brand-original",
+        "label": "המקור",
+        "src": "assets/brand-original.png",
+        "width": 1448,
+        "height": 1086
+      },
+      {
+        "key": "brand-system",
+        "label": "גרסה מאוחרת",
+        "src": "assets/brand-system.png",
+        "width": 2200,
+        "height": 1400
+      }
+    ]
+  },
+  {
+    "id": "character",
+    "english": "Squirrel",
+    "title": "הדמות",
+    "variants": [
+      {
+        "key": "character-original",
+        "label": "המקור",
+        "src": "assets/character-original.png",
+        "width": 1536,
+        "height": 1024
+      },
+      {
+        "key": "character-system",
+        "label": "גרסה מאוחרת",
+        "src": "assets/character-system.png",
+        "width": 2200,
+        "height": 1400
+      }
+    ]
+  }
+]

@@ -1,59 +1,67 @@
 const dialog = document.querySelector('#lightbox');
-const availablePng = new Set(["today-original","today-latest","today-layout","week-original","week-latest","week-layout","shopping-original","shopping-latest","shopping-layout","brand-original","brand-system","character-original","character-system"]);
-const preview = key => 'assets/' + key + '.webp';
-const full = key => 'assets/' + key + (availablePng.has(key) ? '.png' : '.webp');
+const lightboxImage = document.querySelector('#lightbox-img');
 
-document.querySelectorAll('.showcase-section').forEach(section => {
-  const tabs = [...section.querySelectorAll('.variant-btn')];
-  const stage = section.querySelector('.image-stage');
-  const image = stage?.querySelector('img');
-  const link = section.querySelector('.image-original');
-  const title = section.querySelector('h2')?.textContent || '';
-  if (!stage || !image || !tabs.length) return;
+async function initializeGallery() {
+  const response = await fetch('gallery.json');
+  if (!response.ok) throw new Error('Gallery unavailable');
+  const groups = await response.json();
 
-  function choose(button) {
-    const key = button.dataset.key;
-    section.dataset.active = key;
-    tabs.forEach(tab => {
-      const selected = tab === button;
-      tab.classList.toggle('is-active', selected);
-      tab.setAttribute('aria-selected', String(selected));
-      tab.tabIndex = selected ? 0 : -1;
+  groups.forEach(group => {
+    const section = document.getElementById(group.id);
+    const tabs = [...section.querySelectorAll('.variant-btn')];
+    const stage = section.querySelector('.image-stage');
+    const image = stage.querySelector('img');
+    const panel = section.querySelector('[role="tabpanel"]');
+    const link = section.querySelector('.image-original');
+    let selected = group.variants[0];
+
+    function choose(variant) {
+      selected = variant;
+      section.dataset.active = variant.key;
+      tabs.forEach(tab => {
+        const active = tab.dataset.key === variant.key;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      image.src = variant.src;
+      image.width = variant.width;
+      image.height = variant.height;
+      image.alt = group.title + ' — ' + variant.label;
+      panel.setAttribute('aria-labelledby', 'tab-' + variant.key);
+      section.querySelector('.current-version').textContent = variant.label;
+      link.href = variant.src;
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => choose(group.variants[index]));
+      tab.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 :
+          (index + (event.key === 'ArrowLeft' ? 1 : -1) + tabs.length) % tabs.length;
+        choose(group.variants[next]);
+        tabs[next].focus();
+      });
     });
-    image.src = preview(key);
-    image.alt = title + ' — ' + button.dataset.name;
-    section.querySelector('.current-version').textContent = button.dataset.name;
-    section.querySelector('.current-description').textContent = button.dataset.desc || '';
-    link.href = full(key);
-  }
 
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => choose(tab));
-    tab.addEventListener('keydown', event => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-      event.preventDefault();
-      const step = event.key === 'ArrowLeft' ? 1 : -1;
-      const next = tabs[(i + step + tabs.length) % tabs.length];
-      choose(next);
-      next.focus();
+    choose(group.variants[0]);
+    stage.addEventListener('click', () => {
+      document.querySelector('#lightbox-label').textContent = group.title + ' — ' + selected.label;
+      lightboxImage.src = selected.src;
+      lightboxImage.alt = image.alt;
+      document.querySelector('#lightbox-full').href = selected.src;
+      dialog.showModal();
+      document.body.classList.add('modal-open');
+      dialog.querySelector('.lightbox-body').scrollTop = 0;
     });
   });
+  document.documentElement.dataset.galleryReady = 'true';
+}
 
-  choose(tabs.find(tab => tab.classList.contains('is-active')) || tabs[0]);
-
-  stage.addEventListener('click', () => {
-    const key = section.dataset.active;
-    dialog.querySelector('#lightbox-label').textContent =
-      title + ' · ' + section.querySelector('.current-version').textContent;
-    const lightboxImage = dialog.querySelector('#lightbox-img');
-    lightboxImage.src = full(key);
-    lightboxImage.alt = image.alt;
-    dialog.querySelector('#lightbox-full').href = full(key);
-    dialog.showModal();
-    dialog.querySelector('.lightbox-body').scrollTop = 0;
-  });
-});
-dialog.querySelector('#close-lightbox').addEventListener('click', () => dialog.close());
+document.querySelector('#close-lightbox').addEventListener('click', () => dialog.close());
+dialog.addEventListener('close', () => document.body.classList.remove('modal-open'));
 dialog.addEventListener('click', event => {
   if (event.target === dialog) dialog.close();
 });
+initializeGallery().catch(error => console.error(error));
