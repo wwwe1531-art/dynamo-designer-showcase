@@ -1,31 +1,59 @@
-const dialog=document.querySelector('#lightbox');
-const manifest={};
-for(const img of document.querySelectorAll('.image-stage img')){const s=img.closest('.showcase-section');const active=s.querySelector('.variant-btn.is-active');const key=active?.dataset.key; if(key){s.dataset.active=key;}}
-const setVariant=(section,btn)=>{
-  const key=btn.dataset.key;
-  const image=section.querySelector('.image-stage img');
-  const current=section.dataset.active;
-  if(current===key)return;
-  section.dataset.active=key;
-  const list=section.querySelectorAll('.variant-btn');
-  list.forEach(b=>{const on=b===btn;b.classList.toggle('is-active',on);b.setAttribute('aria-selected',String(on));});
-  const url=`assets/${key}.webp`, full=`assets/${key}.png`;
-  image.src=url;
-  image.alt=`${section.querySelector('h2').textContent} — ${btn.dataset.name}`;
-  section.querySelector('.current-version').textContent=btn.dataset.name;
-  section.querySelector('.current-description').textContent=btn.dataset.desc;
-  section.querySelector('.image-original').href=full;
-};
-for(const section of document.querySelectorAll('.showcase-section')){
-  section.querySelectorAll('.variant-btn').forEach(btn=>btn.addEventListener('click',()=>setVariant(section,btn)));
-  section.querySelector('.image-stage').addEventListener('click',()=>{
-    const key=section.dataset.active;
-    dialog.querySelector('#lightbox-label').textContent=`${section.querySelector('h2').textContent} · ${section.querySelector('.current-version').textContent}`;
-    const image=dialog.querySelector('#lightbox-img');image.src=`assets/${key}.png`;image.alt=section.querySelector('h2').textContent;
-    dialog.querySelector('#lightbox-full').href=`assets/${key}.png`;
-    dialog.showModal();
-    dialog.querySelector('.lightbox-body').scrollTop=0;
+const dialog = document.querySelector('#lightbox');
+const availablePng = new Set(['today-latest','week-latest']);
+const preview = key => 'assets/' + key + '.webp';
+const full = key => 'assets/' + key + (availablePng.has(key) ? '.png' : '.webp');
+
+document.querySelectorAll('.showcase-section').forEach(section => {
+  const tabs = [...section.querySelectorAll('.variant-btn')];
+  const stage = section.querySelector('.image-stage');
+  const image = stage?.querySelector('img');
+  const link = section.querySelector('.image-original');
+  const title = section.querySelector('h2')?.textContent || '';
+  if (!stage || !image || !tabs.length) return;
+
+  function choose(button) {
+    const key = button.dataset.key;
+    section.dataset.active = key;
+    tabs.forEach(tab => {
+      const selected = tab === button;
+      tab.classList.toggle('is-active', selected);
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    image.src = preview(key);
+    image.alt = title + ' — ' + button.dataset.name;
+    section.querySelector('.current-version').textContent = button.dataset.name;
+    section.querySelector('.current-description').textContent = button.dataset.desc || '';
+    link.href = full(key);
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => choose(tab));
+    tab.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const step = event.key === 'ArrowLeft' ? 1 : -1;
+      const next = tabs[(i + step + tabs.length) % tabs.length];
+      choose(next);
+      next.focus();
+    });
   });
-}
-dialog.querySelector('#close-lightbox').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+
+  choose(tabs.find(tab => tab.classList.contains('is-active')) || tabs[0]);
+
+  stage.addEventListener('click', () => {
+    const key = section.dataset.active;
+    dialog.querySelector('#lightbox-label').textContent =
+      title + ' · ' + section.querySelector('.current-version').textContent;
+    const lightboxImage = dialog.querySelector('#lightbox-img');
+    lightboxImage.src = full(key);
+    lightboxImage.alt = image.alt;
+    dialog.querySelector('#lightbox-full').href = full(key);
+    dialog.showModal();
+    dialog.querySelector('.lightbox-body').scrollTop = 0;
+  });
+});
+dialog.querySelector('#close-lightbox').addEventListener('click', () => dialog.close());
+dialog.addEventListener('click', event => {
+  if (event.target === dialog) dialog.close();
+});
