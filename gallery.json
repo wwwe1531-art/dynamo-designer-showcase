@@ -1,5 +1,96 @@
 [
   {
+    "id": "recent-character",
+    "english": "Character / Squirrel",
+    "title": "הסנאי — העבודה החדשה",
+    "variants": [
+      {
+        "key": "recent-character-0",
+        "label": "גוף מלא",
+        "src": "assets/recent-character-fullbody.png",
+        "width": 620,
+        "height": 740
+      },
+      {
+        "key": "recent-character-1",
+        "label": "ארבע זוויות",
+        "src": "assets/recent-character-turnaround.png",
+        "width": 472,
+        "height": 168
+      },
+      {
+        "key": "recent-character-2",
+        "label": "לוח הדמות",
+        "src": "assets/recent-character-board.png",
+        "width": 2400,
+        "height": 1920
+      }
+    ]
+  },
+  {
+    "id": "recent-motion",
+    "english": "Animation Preparation",
+    "title": "תנועה — הכנה לאנימציה",
+    "variants": [
+      {
+        "key": "recent-motion-0",
+        "label": "לוח הכנה",
+        "src": "assets/recent-animation-preparation.png",
+        "width": 2400,
+        "height": 1305
+      },
+      {
+        "key": "recent-motion-1",
+        "label": "פריימים רעיוניים",
+        "src": "assets/recent-motion-frames.png",
+        "width": 792,
+        "height": 392
+      }
+    ]
+  },
+  {
+    "id": "recent-logo",
+    "english": "Logo Exploration",
+    "title": "לוגו — כיוונים לסקירה",
+    "variants": [
+      {
+        "key": "recent-logo-0",
+        "label": "לוח חקר הלוגו",
+        "src": "assets/recent-logo-exploration.png",
+        "width": 2400,
+        "height": 1680
+      }
+    ]
+  },
+  {
+    "id": "recent-boards",
+    "english": "Latest Design Boards",
+    "title": "לוחות העיצוב החדשים",
+    "variants": [
+      {
+        "key": "recent-boards-0",
+        "label": "קנבס המותג",
+        "src": "assets/recent-brand-key-visual.png",
+        "width": 2400,
+        "height": 1350
+      },
+      {
+        "key": "recent-boards-1",
+        "label": "צבע וטיפוגרפיה",
+        "src": "assets/recent-tokens-typography.png",
+        "width": 2400,
+        "height": 1850
+      },
+      {
+        "key": "recent-boards-2",
+        "label": "צילום וחומרים",
+        "src": "assets/recent-photography-materials.png",
+        "width": 2400,
+        "height": 1212
+      }
+    ]
+  },
+  {
     "id": "today",
     "english": "Today",
     "title": "היום שלי",
